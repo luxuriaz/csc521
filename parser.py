@@ -33,6 +33,86 @@ def is_number(tok):
     return -1 < tok.find("NUMBER")
 #end utilities
 
+def Program(token_index):
+    '''<Program> ->
+        <Statement> <Program>
+        |<Statement>
+    '''
+    (success, returned_index, returned_subtree) = Term(token_index)
+    if success:
+        subtree =["Program0",returned_subtree]
+        subtree.append(tokens[returned_index])
+        (success, returned_index, returned_subtree) = Program(returned_index + 1)
+        if success:
+            subtree.append(returned_subtree)
+            return [True, returned_index, subtree]
+    (success, returned_index, returned_subtree) = Term(token_index)
+    if success:
+        subtree = ["Program1", returned_subtree]
+        return [True, returned_index, ["Program1", returned_subtree]]
+    return [False, token_index, []]
+
+def Statement(token_index):
+    '''<Statement> ->
+        <FunctionDeclaration>
+        |<Assignment>
+        |<Print>
+    '''
+    (success, returned_index, returned_subtree) = Term(token_index)
+    if success:
+        return [True, returned_index, ["Statement0", returned_subtree]]
+    (success, returned_index, returned_subtree) = Term(token_index)
+    if success:
+        return [True, returned_index, ["Statement1", returned_subtree]]
+    (success, returned_index, returned_subtree) = Term(token_index)
+    if success:
+        return [True, returned_index, ["Statement2", returned_subtree]]
+    return [False, token_index, []]
+
+def FunctionDeclaration(token_index):
+    '''
+    <FunctionDeclaration> ->
+        FUNCTION <Name> LPAREN <FunctionParams> LBRACE <FunctionBody> RBRACE
+    '''
+
+        if "FUNCTION" == tokens[returned_index]:
+            subtree.append(tokens[returned_index])
+            (success, returned_index, returned_subtree) = FunctionCallParams(
+                returned_index + 1)
+            if success:
+                subtree.append(returned_subtree)
+                if
+        
+'''
+<FunctionParams> -> <NameList> RPAREN | RPAREN
+
+<FunctionBody> -> <Program> <Return> | <Return>
+
+<Return> -> RETURN <ParameterList>
+
+
+//Assignment statements
+<Assignment> -> <SingleAssignment> | <MultipleAssignment>
+
+<SingleAssignment> -> VAR <Name> ASSIGN <Expression>
+
+
+//size of NameList has to match the number of return values from the FunctionCall
+<MultipleAssignment> -> VAR <NameList> ASSIGN <FunctionCall>
+
+
+//print statements
+<Print> -> PRINT <Expression>
+
+
+//name and parameter list
+<NameList> -> <Name> COMMA <NameList> | <Name>
+
+<ParameterList> -> <Parameter> COMMA <ParameterList> | <Parameter>
+
+<Parameter> -> <Expression> | <Name>
+'''
+
 def Expression(token_index):
     '''<Expression> ->
         <Term> ADD <Expression>

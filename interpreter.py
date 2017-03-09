@@ -24,7 +24,7 @@ tree = ['FunctionDeclaration0',
 
         ]],
     'RBRACE']
-
+tree = ['Value0', ['Name1', 'IDENT:x']]
 '''Scope example:
 var x = 4 #{'x':4}
 function foo(z) {
@@ -80,6 +80,8 @@ scope_with_function = {
                 ['Name0', 'IDENT:y'],
                 'COMMA',
                 ['NameList1', ['Name0', 'IDENT:z']]]]]]}
+
+
 
 #start utilities
 def lookup_in_scope_stack(name, scope):
@@ -176,19 +178,21 @@ def FunctionParams1(pt, scope):
     return []
 
 # <FunctionBody> -> <Program> <Return> | <Return>
-def FunctionBody1(pt, scope):
-
+def FunctionBody1(pt, scope):#FunctionBody0？
+    func_by_name(pt[1][0],pt[1], scope)
+    return
 
 # <Return> -> RETURN <ParameterList>
 def Return0(pt, scope):
-
+    return func_by_name(pt[1][0],pt[1],scope)
 
 # <Assignment> -> <SingleAssignment> | <MultipleAssignment>
 def Assignment0(pt, scope):
+    return func_by_name(pt[1][0],pt[1],scope)
 
 
 def Assignment1(pt, scope):
-
+    return func_by_name(pt[1][0],pt[1],scope)
 
 # <SingleAssignment> -> VAR <Name> ASSIGN <Expression>
 def SingleAssignment0(pt, scope):
@@ -197,16 +201,25 @@ def SingleAssignment0(pt, scope):
     #3. Bind name to value in scope.
     #Bonus: error if the name already exists in scope -- no rebinding
 
+    name = func_by_name(pt[2][0], pt[2], scope)
+    value = func_by_name(pt[4][0],pt[4], scope)
+    return name + func_by_name(pt[4][0],pt[4], name=value)
+
 # <MultipleAssignment> -> VAR <NameList> ASSIGN <FunctionCall>
 def MultipleAssignment0(pt, scope):
     #1. Get list of variable names
     #2. Get the values returned from the fuction call
     #Bonus: error if any name already exists in scope -- no rebinding
     #Bonus: error if the number of variable names does not match the number of values
+    nameList = func_by_name(pt[2][0], pt[2], scope)
+    value = func_by_name(pt[4][0],pt[4], scope)
+    return name + func_by_name(pt[4][0],pt[4], nameList=value)
+
 
 
 # <Print> -> PRINT <Expression>
 def Print0(pt, scope):
+    return func_by_name(pt[2][0],pt[2],scope)
 
 
 # <NameList> -> <Name> COMMA <NameList> | <Name>
@@ -221,11 +234,15 @@ def NameList1(pt, scope):
 # <ParameterList> -> <Parameter> COMMA <ParameterList> | <Parameter>
 # #should return a a list of values.
 def ParameterList0(pt, scope):
+    parameter = func_by_name(pt[1][0],pt[1],scope)
+    return [parameter] + func_by_name(pt[3][0], pt[3], scope)
 
 def ParameterList1(pt, scope):
+    return func_by_name(pt[1][0], pt[1], scope)
 
 # <Parameter> -> <Expression> | <Name>
 def Parameter0(pt, scope):
+    return func_by_name(pt[1][0],pt[1],scope)
 
 def Parameter1(pt, scope):
     #pull value out of [value,name]
@@ -249,21 +266,34 @@ def Expression0(pt, scope):
 
 def Expression1(pt, scope):
     #<Term> SUB <Expression>
-
+    left_value = func_by_name(pt[1][0], pt[1], scope)
+    right_value = func_by_name(pt[3][0], pt[3], scope)
+    return left_value - right_value
 def Expression2(pt, scope):
     #<Term>
+    return func_by_name([1][0],pt[1],scope)
 
 #<Term> -> <Factor> MULT <Term> | <Factor> DIV <Term> | <Factor>
 def Term0(pt, scope):
+    left_value = func_by_name([1][0],pt[1],scope)
+    right_value = func_by_name([3][0],pt[3],scope)
+    return left_value*right_value
 
 def Term1(pt, scope):
+    left_value = func_by_name([1][0],pt[1],scope)
+    right_value = func_by_name([3][0],pt[3],scope)
+    return left_value/right_value
 
 def Term2(pt, scope):
+    return func_by_name([1][0],pt[1],scope)
 
 #<Factor> -> <SubExpression> EXP <Factor> | <SubExpression> | <FunctionCall> | <Value> EXP <Factor> | <Value>
 def Factor0(pt, scope):
-
+    left_value = func_by_name([1][0],pt[1],scope)
+    right_value = func_by_name([3][0],pt[3],scope)
+    return left_value**right_value
 def Factor1(pt, scope):
+    return func_by_name([1][0],pt[1],scope)
 
 
 def Factor2(pt, scope):
@@ -271,8 +301,12 @@ def Factor2(pt, scope):
     return func_by_name(pt[1][0], pt[1], scope, scope)[0]
 
 def Factor3(pt, scope):
+    left_value = func_by_name([1][0],pt[1],scope)
+    right_value = func_by_name([3][0],pt[3],scope)
+    return left_value**right_value
 
 def Factor4(pt, scope):
+    return func_by_name([1][0],pt[1],scope)[0]
 
 
 #<FunctionCall> ->  <Name> LPAREN <FunctionCallParams> COLON <Number> | <Name> LPAREN <FunctionCallParams>
@@ -299,7 +333,7 @@ def FunctionCallParams1(pt, scope):
 
 #<SubExpression> -> LPAREN <Expression> RPAREN
 def SubExpression0(pt, scope):
-
+    return func_by_name(pt[2][0],pt[1],scope)
 #<Value> -> <Name> | <Number>
 def Value0(pt, scope):
     return func_by_name(pt[1][0], pt[1], scope)[0]
@@ -312,22 +346,29 @@ def Name0(pt, scope):
     name = get_name_from_ident(pt[1])
     return [lookup_in_scope_stack(name, scope), name]
 
-def Name1(pt, scope):]
+def Name1(pt, scope):#miss sub
+    name = get_name_from_ident(pt[1])
+    return [lookup_in_scope_stack(name, scope), name]
 
-def Name2(pt, scope):
+def Name2(pt, scope):#miss add
+    name = get_name_from_ident(pt[1])
+    return [lookup_in_scope_stack(name, scope), name]
 
 #<Number> -> NUMBER | SUB NUMBER | ADD NUMBER
 def Number0(pt, scope):
     return get_number_from_ident(pt[1])
 
 def Number1(pt, scope):
+    return -(get_number_from_ident[1])
 
 def Number2(pt, scope):
+    return +(get_number_from_ident[1])
 
 if __name__ == '__main__':
     #choose a parse tree and initial scope
-    tree = tree_with_function_call
+    #tree = tree_with_function_call
     scope = scope_with_function
+    print(tree)
     #execute the program starting at the top of the tree
     func_by_name(tree[0], tree, scope)
     #Uncomment to see the final scope after the program has executed.
