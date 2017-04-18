@@ -1,0 +1,27 @@
+Lexer - 29/30
+
+  While format does not follow the specs given in homework guideline, the contents were lexed properly.
+
+  Example 1 CORRECTLY LEXED
+  Example 2 CORRECTLY LEXED
+  Example 3 CORRECTLY LEXED
+  Example 4 CORRECTLY LEXED
+  Example 5 CORRECTLY LEXED
+
+Parser: 20/30
+
+  The parser's code seems functional but I was unable to run it because of the
+  lack of documentation. This led to me being unable to test it.
+
+Interpreter: 14/20
+
+  There was no documentation on how to run the interpreter within the readme.
+  Because of this I didn't know how to do the file input because of the parse
+  having some issues with parsing.
+
+  There does show some signs of work.
+
+Style: 17/20
+
+  While there was a readme, it didn't have any information such as how to run
+  the files as well as what version of python was being used.
