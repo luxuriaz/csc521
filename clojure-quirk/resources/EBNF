@@ -1,0 +1,75 @@
+Program := Statement | Statement Program
+Statement := FunctionDeclaration | Assignment | Print
+FunctionDeclaration := FUNCTION Name LPAREN FunctionParams LBRACE FunctionBody RBRACE
+FunctionParams := NameList RPAREN |RPAREN
+FunctionBody := Program Return | Return
+
+Return := RETURN ParameterList
+
+
+
+Assignment := SingleAssignment | MultipleAssignment
+
+SingleAssignment := VAR Name ASSIGN Expression
+
+MultipleAssignment := VAR NameList ASSIGN FunctionCall
+
+
+(*print statements*)
+Print := PRINT Expression
+
+
+(*name and parameter list*)
+NameList := Name COMMA NameList | Name
+
+ParameterList := Parameter COMMA ParameterList | Parameter
+
+Parameter := Expression | Name
+
+
+(*arithmetic expressions*)
+Expression := Term ADD Expression | Term SUB Expression | Term
+
+Term := Factor MULT Term | Factor DIV Term | Factor
+
+Factor := SubExpression EXP Factor | SubExpression | FunctionCall | Value EXP Factor | Value
+
+FunctionCall :=  Name LPAREN FunctionCallParams COLON Num | Name LPAREN FunctionCallParams
+
+FunctionCallParams :=  ParameterList RPAREN | RPAREN
+
+SubExpression := LPAREN Expression RPAREN
+
+Value := Name | Num
+
+
+(*Literals*)
+Name := IDENT | SUB IDENT | ADD IDENT
+
+Num := NUMBER | SUB NUMBER | ADD NUMBER
+
+
+VAR:=#"var"
+FUNCTION:=#"function"
+RETURN:=#"return"
+PRINT:=#"print"
+
+(*operators*)
+ASSIGN:= "="
+ADD:= #"\+"
+SUB:= #"\-"
+MULT:= #"\*"
+DIV:= #"\/"
+EXP:= #"\^"
+
+(*Separators*)
+LPAREN:= #"\("
+RPAREN:= #"\)"
+LBRACE:= #"\{"
+RBRACE:= #"\}"
+COMMA:= #"\,"
+COLON:= #"\:"
+
+(*literals*)
+NUMBER:= #"((\d+(\.\d*)?)|(\.\d+))"
+IDENT:= #"[a-zA-Z]+[a-zA-Z0-9_]*"
