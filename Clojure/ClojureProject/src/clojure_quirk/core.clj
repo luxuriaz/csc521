@@ -244,7 +244,7 @@
      ;(Double. (second (second subtree)))
     ;)
   ;(System/exit 0)
-    )
+)
 
 (defn interpret-quirk [subtree scope]
   (CallByLabel (first subtree) subtree {}))
@@ -257,7 +257,7 @@
   (if (.equals "-pt" (first *command-line-args*))
     (def SHOW_PARSE_TREE true))
   (def quirk-parser (insta/parser (slurp "resources/EBNF") :auto-whitespace :standard))
-  (def parse-tree (quirk-parser (slurp *in* ))) ;(slurp "resources/example3.q")))
+  (def parse-tree (quirk-parser (slurp *in*))) ;(slurp "resources/example3.q")))
   (if (= true SHOW_PARSE_TREE)
     (pprint parse-tree)
     (interpret-quirk parse-tree {}))
